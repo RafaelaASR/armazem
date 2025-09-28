@@ -1,7 +1,10 @@
 import tkinter as tk
 from tkinter import ttk
+
+from matplotlib import cm
 from matplotlib.figure import Figure
 from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
+
 from collections import deque
 from Node import Node
 
@@ -15,23 +18,24 @@ class BuscaNP(object):
 
         # Comboboxes
         opcoes = ["0", "2", "3"]
-        metodos = ["AMPLITUDE", "PROFUNDIDADE", "PROFUNDIDADE LIMITADA"]
+        metodos = ["AMPLITUDE", "PROFUNDIDADE", "PROFUNDIDADE LIMITADA", "APROFUNDAMENTO INTERATIVO", "BIDIRECIONAL"]
+
 
         self.origem_combobox = ttk.Combobox(self.janela, values=opcoes, state="readonly")
-        self.origem_combobox.grid(row=0, column=1, padx=10, pady=5, sticky="ew")
+        self.origem_combobox.grid(row=1, column=0, padx=10, pady=5, sticky="w")
 
         self.destino_combobox = ttk.Combobox(self.janela, values=opcoes, state="readonly")
-        self.destino_combobox.grid(row=1, column=1, padx=10, pady=5, sticky="ew")
+        self.destino_combobox.grid(row=2, column=0, padx=10, pady=5, sticky="w")
 
         self.metodo_combobox = ttk.Combobox(self.janela, values=metodos, state="readonly")
-        self.metodo_combobox.grid(row=2, column=1, padx=10, pady=5, sticky="ew")
+        self.metodo_combobox.grid(row=3, column=0, padx=10, pady=5, sticky="w")
 
         # Botão — agora dentro do __init__, então self existe
         self.botao = tk.Button(self.janela, text="Obter Valor", command=self.obter_valor_selecionado)
-        self.botao.grid(row=3, column=1, padx=10, pady=5, sticky="ew")
+        self.botao.grid(row=4, column=1, padx=10, pady=5, sticky="ew")
 
         # Configura expansão do grid
-        self.janela.grid_columnconfigure(0, weight=1)
+        self.janela.grid_columnconfigure(1, weight=1)
         self.janela.grid_rowconfigure(0, weight=1)
 
     #--------------------------------------------------------------------------
@@ -81,7 +85,27 @@ class BuscaNP(object):
             caminho.append(node.estado)
             node = node.pai
         caminho.reverse()
+        print("entrou")
         return caminho
+    
+     #--------------------------------------------------------------------------    
+    
+    #-------------------------------------------------------------------------- 
+    # CONTROLE DE NÓS REPETIDOS
+    #--------------------------------------------------------------------------
+    def exibirCaminho1(self,encontro,visitado1, visitado2):
+        # nó do lado do início
+        encontro1 = visitado1[encontro]  
+        # nó do lado do objetivo
+        encontro2 = visitado2[encontro]
+    
+        caminho1 = self.exibirCaminho(encontro1)
+        caminho2 = self.exibirCaminho(encontro2)
+    
+        # Inverte o caminho
+        caminho2 = list(reversed(caminho2[:-1]))
+    
+        return caminho1 + caminho2
     
     #--------------------------------------------------------------------------
     # BUSCA EM AMPLITUDE
@@ -207,15 +231,137 @@ class BuscaNP(object):
                             return self.exibirCaminho(filho)
         return None
 
+     #--------------------------------------------------------------------------
+    
+    #--------------------------------------------------------------------------
+    # BUSCA EM APROFUNDAMENTO ITERATIVO
+    #--------------------------------------------------------------------------
+    def aprof_iterativo(self,inicio,fim,nx,ny,mapa,lim_max):
+        for lim in range(1,lim_max):
+            # Finaliza se início for igual a objetivo
+            if inicio == fim:
+                return [inicio]
+            
+            # GRID: transforma em tupla
+            t_inicio = tuple(inicio)   # grid
+            t_fim = tuple(fim)         # grid
+            
+            # Lista para árvore de busca - FILA
+            pilha = deque()
+        
+            # Inclui início como nó raíz da árvore de busca
+            raiz = Node(None,t_inicio,0,None,None)  # grid
+            pilha.append(raiz)
+        
+            # Marca início como visitado
+            visitado = {tuple(inicio): raiz}    # grid
+            
+            while pilha:
+                # Remove o primeiro da FILA
+                atual = pilha.pop()
+                
+                if atual.v1<lim:                    
+                    # Gera sucessores a partir do grid
+                    filhos = self.sucessores_grid(atual.estado,nx,ny,mapa) # grid
+            
+                    for novo in filhos:
+                        t_novo = tuple(novo)       # grid
+                        if t_novo not in visitado: # grid
+                            filho = Node(atual,t_novo,atual.v1 + 1,None,None) # grid
+                            pilha.append(filho)
+                            visitado[t_novo] = filho # grid
+                            
+                            # Verifica se encontrou o objetivo
+                            if t_novo == t_fim:    # grid
+                                return self.exibirCaminho(filho)
+        return None
+    
+    #--------------------------------------------------------------------------
+    # BUSCA BIDIRECIONAL
+    #--------------------------------------------------------------------------
+    def bidirecional(self,inicio,fim,nx,ny,mapa):
+        if inicio == fim:
+            return [inicio]
+        
+        # GRID: transforma em tupla
+        t_inicio = tuple(inicio)   # grid
+        t_fim = tuple(fim)         # grid
+
+        # Lista para árvore de busca a partir da origem - FILA
+        fila1 = deque()
+        
+        # Lista para árvore de busca a partir do destino - FILA
+        fila2 = deque()
+        
+        # Inclui início e fim como nó raíz da árvore de busca
+        raiz = Node(None,t_inicio,0,None,None)  # grid
+        fila1.append(raiz)
+
+        raiz = Node(None,t_fim,0,None,None)  # grid
+        fila2.append(raiz)
+    
+        # Visitados mapeando estado -> Node (para reconstruir o caminho)
+        visitado1 = {tuple(inicio): raiz}    # grid
+        visitado2 = {tuple(fim): raiz}    # grid
+        
+        nivel = 0
+        while fila1 and fila2:
+            # ****** Executa AMPLITUDE a partir da ORIGEM *******
+            # Quantidade de nós no nível atual
+            nivel = len(fila1)  
+            for _ in range(nivel):
+                # Remove o primeiro da FILA
+                atual = fila1.popleft()
+
+                # Gera sucessores a partir do grid
+                filhos = self.sucessores_grid(atual.estado,nx,ny,mapa) # grid
+
+                for novo in filhos:
+                    t_novo = tuple(novo)       # grid
+                    if t_novo not in visitado1: # grid
+                        filho = Node(atual,t_novo,atual.v1 + 1,None,None) # grid
+                        visitado1[t_novo] = filho # grid
+
+                        # Encontrou encontro com a outra AMPLITUDE
+                        if t_novo in visitado2:    # grid
+                            return self.exibirCaminho1(tuple(novo), visitado1, visitado2)
+
+                        # Insere na FILA
+                        fila1.append(filho)
+            
+            # ****** Executa AMPLITUDE a partir do OBJETIVO *******
+            # Quantidade de nós no nível atual
+            nivel = len(fila2)  
+            for _ in range(nivel):
+                # Remove o primeiro da FILA
+                atual = fila2.popleft()
+                
+                # Gera sucessores a partir do grid
+                filhos = self.sucessores_grid(atual.estado,nx,ny,mapa) # grid
+
+                for novo in filhos:
+                    t_novo = tuple(novo)       # grid
+                    if t_novo not in visitado2: # grid
+                        filho = Node(atual,t_novo,atual.v1 + 1,None,None) # grid
+                        visitado2[t_novo] = filho # grid
+
+                        # Encontrou encontro com a outra AMPLITUDE
+                        if t_novo in visitado1:    # grid
+                            return self.exibirCaminho1(novo, visitado1, visitado2)
+
+                        # Insere na FILA
+                        fila2.append(filho)
+        return None
+
     def obter_valor_selecionado(self):
         origem = self.origem_combobox.get() 
         destino = self.destino_combobox.get()
         metodo = self.metodo_combobox.get()
-        caminho = None
+
         mapa = [
             [0, 0, 1],
             [0, 1, 0],
-            [0, 0, 0]
+            [1, 0, 0]
         ]
 
         # Converte para posição no grid
@@ -225,39 +371,64 @@ class BuscaNP(object):
             "3": (1, 0)
         }
 
+        posicoes_inv = {v: k for k,v in posicoes.items()}
+
         inicio = posicoes[origem]
         fim = posicoes[destino]
 
         nx = len(mapa)
         ny = len(mapa[0])
 
+        caminho = None
         if origem and destino and metodo:  # só se todos estiverem preenchidos
             if metodo == "AMPLITUDE":
-                self.amplitude(inicio,fim,nx,ny,mapa)   # grid
+                caminho = self.amplitude(inicio,fim,nx,ny,mapa)   # grid
             elif metodo == "PROFUNDIDADE":
-                self.profundidade(inicio,fim,nx,ny,mapa)   # grid
+                caminho = self.profundidade(inicio,fim,nx,ny,mapa)   # grid
             elif metodo == "PROFUNDIDADE LIMITADA":
-                self.prof_limitada(inicio,fim,nx,ny,mapa, 4)
-          
+                caminho = self.prof_limitada(inicio,fim,nx,ny,mapa, 4)
+            elif metodo == "APROFUNDAMENTO INTERATIVO":
+                caminho = self.aprof_iterativo(inicio,fim,nx,ny,mapa, 4)
+            elif metodo == "BIDIRECIONAL":
+                caminho = self.bidirecional(inicio,fim,nx,ny,mapa)
+            
+            if caminho:
+                caminho_str = " -> ".join(str(posicoes_inv[t]) for t in caminho)
+            else:
+                caminho_str = "Caminho não encontrado"
+        
             # Criar figura do Matplotlib
             fig = Figure(figsize=(5, 4), dpi=100)
             plot_fig = fig.add_subplot(111)
+            
+            # Recebe os pontos (x, y)
+            plot_fig.imshow(mapa, cmap=cm.Greys, origin="upper")
 
-            # Exemplo de gráfico (pode trocar para grafo de arestas depois)
-            plot_fig.plot([0, 1, 2, 3], [int(origem), 2, 3, int(destino)])
+            # Se houver caminho, desenha em vermelho
+            if caminho:
+                xs, ys = zip(*caminho)
+                plot_fig.plot(ys, xs, color="red", linewidth=2, marker="o")
 
             # Inserir no Tkinter (grid) — substitui se já existir
             if self.canvas is not None:
                 self.canvas.get_tk_widget().destroy()
 
             self.canvas = FigureCanvasTkAgg(fig, master=janela)
-            self.canvas.get_tk_widget().grid(row=0, column=0, rowspan=4, padx=10, pady=5, sticky="nsew")
+            self.canvas.get_tk_widget().grid(row=0, column=1, rowspan=4, padx=10, pady=5, sticky="nsew")
 
+        #Exibe no Tkinter
+        
+        if hasattr(self, "caminho_label") and self.caminho_label is not None:
+            self.caminho_label.destroy()
+
+        self.caminho_label = tk.Label(self.janela, text=caminho_str, font=("Arial", 12), fg="blue")
+        self.caminho_label.grid(row=5, column=0, columnspan=2, padx=10, pady=5)
 
 # -------------------------
 # CRIAR A JANELA E INICIAR
 # -------------------------
 if __name__ == "__main__":
     janela = tk.Tk()
+    janela.title("Metodos de busca")
     app = BuscaNP(janela)
     janela.mainloop()

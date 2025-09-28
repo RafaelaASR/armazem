@@ -1,1 +1,48 @@
-matplotlib
+#----------------------------------------------------------------------
+Requisitos
+    Python: versão 3.11 (ou superior)
+#----------------------------------------------------------------------
+Instalação das dependências
+
+ - O projeto utiliza as seguintes bibliotecas:
+
+    matplotlib → para visualização dos grafos e grids
+
+    networkx → para criação e manipulação dos grafos
+
+    tkinter → para interface gráfica com janelas e inputs
+
+    Instalar via pi
+
+        pip install networkx matplotlib
+
+    - Ou apenas 
+
+        pip install matplotlib
+
+    Instalar via conda
+
+        conda install -c conda-forge matplotlib / conda install matplotlib
+
+    Instalar via pixi
+
+        pixi add matplotlib
+
+    Instalar via uv
+
+        uv add matplotlib 
+        uv add matplotlib pyside6
+
+#----------------------------------------------------------------------
+Compatibilidade
+ - Caso encontre problemas de versão
+
+ - Debian/Ubuntu
+    sudo apt-get install python3-tk 
+
+ - Windows
+    python -m tkinter
+
+#----------------------------------------------------------------------
+Lista pacotes
+    pip list
