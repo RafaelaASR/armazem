@@ -17,22 +17,32 @@ class BuscaNP(object):
         self.canvas = None
 
         # Comboboxes
-        opcoes = ["0", "2", "3"]
-        metodos = ["AMPLITUDE", "PROFUNDIDADE", "PROFUNDIDADE LIMITADA", "APROFUNDAMENTO INTERATIVO", "BIDIRECIONAL"]
+        opcoes = ["0", "1", "2", "3"]
+        metodos = ["AMPLITUDE", "PROFUNDIDADE", "PROFUNDIDADE LIMITADA",
+        "APROFUNDAMENTO ITERATIVO", "BIDIRECIONAL", "CUSTO UNIFORME", "GREEDY", "A*", "AIA*"]
 
+
+        self.label_origem = ttk.Label(self.janela, text="Selecine o ponto de origem:", font=("Arial", 12), foreground="black")
+        self.label_origem.grid(row=0, column=0, padx=10, pady=(0,0), sticky="ew")
 
         self.origem_combobox = ttk.Combobox(self.janela, values=opcoes, state="readonly")
-        self.origem_combobox.grid(row=1, column=0, padx=10, pady=5, sticky="w")
+        self.origem_combobox.grid(row=1, column=0, columnspan=1, padx=10, pady=(2, 5), sticky="ew")
+
+        self.label_destino = ttk.Label(self.janela, text="Selecine o ponto de destino:", font=("Arial", 12), foreground="black")
+        self.label_destino.grid(row=2, column=0, columnspan=1, padx=10, pady=5, sticky="ew")
 
         self.destino_combobox = ttk.Combobox(self.janela, values=opcoes, state="readonly")
-        self.destino_combobox.grid(row=2, column=0, padx=10, pady=5, sticky="w")
+        self.destino_combobox.grid(row=3, column=0, columnspan=1, padx=10, pady=5, sticky="ew")
+
+        self.label_metodo = ttk.Label(self.janela, text="Selecine o método de busca:", font=("Arial", 12), foreground="black")
+        self.label_metodo.grid(row=4, column=0, columnspan=1, padx=10, pady=5, sticky="ew")
 
         self.metodo_combobox = ttk.Combobox(self.janela, values=metodos, state="readonly")
-        self.metodo_combobox.grid(row=3, column=0, padx=10, pady=5, sticky="w")
+        self.metodo_combobox.grid(row=5, column=0, columnspan=1, padx=10, pady=5, sticky="ew")
 
         # Botão — agora dentro do __init__, então self existe
         self.botao = tk.Button(self.janela, text="Obter Valor", command=self.obter_valor_selecionado)
-        self.botao.grid(row=4, column=1, padx=10, pady=5, sticky="ew")
+        self.botao.grid(row=6, column=0, columnspan=1, padx=5, pady=5, sticky="ew")
 
         # Configura expansão do grid
         self.janela.grid_columnconfigure(1, weight=1)
@@ -85,7 +95,6 @@ class BuscaNP(object):
             caminho.append(node.estado)
             node = node.pai
         caminho.reverse()
-        print("entrou")
         return caminho
     
      #--------------------------------------------------------------------------    
@@ -358,6 +367,7 @@ class BuscaNP(object):
         destino = self.destino_combobox.get()
         metodo = self.metodo_combobox.get()
 
+        # 0 - branco, 1 - preto
         mapa = [
             [0, 0, 1],
             [0, 1, 0],
@@ -409,20 +419,41 @@ class BuscaNP(object):
                 xs, ys = zip(*caminho)
                 plot_fig.plot(ys, xs, color="red", linewidth=2, marker="o")
 
+                destino_x, destino_y = xs[0], ys[0]
+                plot_fig.annotate(
+                    "Origem",
+                    xy=(destino_y, destino_x),             # primeiro ponto
+                    xytext=(destino_y+0.3, destino_x-0.3), # deslocamento do texto
+                    arrowprops=dict(facecolor="green", shrink=0.05, width=2, headwidth=8),
+                    fontsize=10,
+                    color="green"
+                )
+
+                destino_x, destino_y = xs[-1], ys[-1]  # último ponto do caminho
+                plot_fig.annotate(
+                    "Destino",
+                    xy=(destino_y, destino_x),
+                    xytext=(destino_y+0.3, destino_x-0.3),
+                    arrowprops=dict(facecolor="red", shrink=0.05, width=2, headwidth=8),
+                    fontsize=10,
+                    color="red"
+                )
+
+
             # Inserir no Tkinter (grid) — substitui se já existir
             if self.canvas is not None:
                 self.canvas.get_tk_widget().destroy()
 
             self.canvas = FigureCanvasTkAgg(fig, master=janela)
-            self.canvas.get_tk_widget().grid(row=0, column=1, rowspan=4, padx=10, pady=5, sticky="nsew")
+            self.canvas.get_tk_widget().grid(row=0, column=1, rowspan=7, padx=10, pady=0, sticky="nsew")
 
         #Exibe no Tkinter
         
         if hasattr(self, "caminho_label") and self.caminho_label is not None:
             self.caminho_label.destroy()
 
-        self.caminho_label = tk.Label(self.janela, text=caminho_str, font=("Arial", 12), fg="blue")
-        self.caminho_label.grid(row=5, column=0, columnspan=2, padx=10, pady=5)
+        self.caminho_label = tk.Label(self.janela, text="Caminho encontrado: " + caminho_str, font=("Arial", 12), fg="blue")
+        self.caminho_label.grid(row=7, column=0, columnspan=2, padx=10, pady=0)
 
 # -------------------------
 # CRIAR A JANELA E INICIAR
