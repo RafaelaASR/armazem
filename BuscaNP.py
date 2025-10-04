@@ -676,7 +676,7 @@ class BuscaNP(object):
             if caminho:
                 if type(caminho) == list:
                     xs, ys = zip(*caminho)
-                else:
+                elif caminho != None:
                     xs, ys = zip(*caminho[0])
                 plot_fig.plot(ys, xs, color="red", linewidth=2, marker="o")
 
@@ -716,8 +716,11 @@ class BuscaNP(object):
         if type(caminho) == list:
             self.caminho_label = tk.Label(self.janela, text="Caminho encontrado: " + caminho_str, font=("Arial", 12), fg="blue")
             self.caminho_label.grid(row=7, column=0, columnspan=2, padx=10, pady=0)
+        elif caminho == None:
+            self.custo_label = tk.Label(self.janela, text=caminho_str, font=("Arial", 12), fg="red")
+            self.custo_label.grid(row=7, column=0, columnspan=2, padx=10, pady=0)
         else:
-            self.custo_label = tk.Label(self.janela, text="Caminho encontrado: " + caminho_str +  " Custo total: " + str(custo_str), font=("Arial", 12), fg="blue")
+            self.custo_label = tk.Label(self.janela, text="Caminho encontrado: " + caminho_str +  " - Custo total: " + str(custo_str), font=("Arial", 12), fg="blue")
             self.custo_label.grid(row=7, column=0, columnspan=2, padx=10, pady=0)
 # -------------------------
 # CRIAR A JANELA E INICIAR
