@@ -712,12 +712,13 @@ class BuscaNP(object):
         
         if hasattr(self, "caminho_label") and self.caminho_label is not None:
             self.caminho_label.destroy()
+            self.custo_label.destroy()
 
         if type(caminho) == list:
             self.caminho_label = tk.Label(self.janela, text="Caminho encontrado: " + caminho_str, font=("Arial", 12), fg="blue")
             self.caminho_label.grid(row=7, column=0, columnspan=2, padx=10, pady=0)
         elif caminho == None:
-            self.custo_label = tk.Label(self.janela, text=caminho_str, font=("Arial", 12), fg="red")
+            self.caminho_label = tk.Label(self.janela, text=caminho_str, font=("Arial", 12), fg="red")
             self.custo_label.grid(row=7, column=0, columnspan=2, padx=10, pady=0)
         else:
             self.custo_label = tk.Label(self.janela, text="Caminho encontrado: " + caminho_str +  " - Custo total: " + str(custo_str), font=("Arial", 12), fg="blue")
