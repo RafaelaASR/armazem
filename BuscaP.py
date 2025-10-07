@@ -8,6 +8,10 @@ class busca(object):
     def sucessores_grid_ponderado(self,st,nx,ny,mapa):
         f = []
         x, y = st[0], st[1]
+        
+        if mapa[x][y] == 9:
+            return f
+        
         # DIREITA
         if y+1<ny:
             if mapa[x][y+1]==0:

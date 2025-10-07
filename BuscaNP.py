@@ -26,32 +26,32 @@ class BuscaNP(busca):
         "APROFUNDAMENTO ITERATIVO", "BIDIRECIONAL", "CUSTO UNIFORME", "GREEDY", "A*", "AIA*"]
 
         self.label_origem = ttk.Label(self.janela, text="Selecione o ponto de origem:", font=("Arial", 12), foreground="black", background="#dfe3ee")
-        self.label_origem.grid(row=0, column=0,  padx=20, pady=(0,0), sticky="ew")
+        self.label_origem.grid(row=1, column=0,  padx=20, pady=(0,0), sticky="ew")
 
         self.origem_combobox = ttk.Combobox(self.janela, values=opcoes, state="readonly")
-        self.origem_combobox.grid(row=1, column=0, padx=20, pady=(2, 5), sticky="ew")
+        self.origem_combobox.grid(row=2, column=0, padx=20, pady=(2, 5), sticky="ew")
 
         self.label_destino = ttk.Label(self.janela, text="Selecione o ponto de destino:", font=("Arial", 12), foreground="black", background="#dfe3ee")
-        self.label_destino.grid(row=2, column=0, padx=20, pady=5, sticky="ew")
+        self.label_destino.grid(row=3, column=0, padx=20, pady=5, sticky="ew")
 
         self.destino_combobox = ttk.Combobox(self.janela, values=opcoes, state="readonly")
-        self.destino_combobox.grid(row=3, column=0, padx=20, pady=5, sticky="ew")
+        self.destino_combobox.grid(row=4, column=0, padx=20, pady=5, sticky="ew")
 
         self.label_metodo = ttk.Label(self.janela, text="Selecione o método de busca:", font=("Arial", 12), foreground="black", background="#dfe3ee")
-        self.label_metodo.grid(row=4, column=0, padx=20, pady=5, sticky="ew")
+        self.label_metodo.grid(row=5, column=0, padx=20, pady=5, sticky="ew")
 
         self.metodo_combobox = ttk.Combobox(self.janela, values=metodos, state="readonly")
-        self.metodo_combobox.grid(row=5, column=0, padx=20, pady=(2, 5), sticky="ew")
+        self.metodo_combobox.grid(row=6, column=0, padx=20, pady=(2, 5), sticky="ew")
 
         # Botão — agora dentro do __init__, então self existe
         self.botao = tk.Button(self.janela, text="Obter Valor", command=self.obter_valor_selecionado, background="#c1cff6", borderwidth=1,        # remove a borda do botão
         highlightthickness=0)
-        self.botao.grid(row=6, column=0, columnspan=1, padx=5, pady=5, sticky="ew")
+        self.botao.grid(row=7, column=0, columnspan=1, padx=5, pady=5, sticky="ew")
 
 
         # Configura expansão do grid
         self.janela.grid_columnconfigure(1, weight=1)
-        self.janela.grid_rowconfigure(7, weight=1)
+        self.janela.grid_rowconfigure(8, weight=1)
         self.janela.configure(background='#dfe3ee')
  
     #-----------------------------------------------------------------------------
@@ -76,6 +76,10 @@ class BuscaNP(busca):
     def sucessores_grid(self,st,nx,ny,mapa):
         f = []
         x, y = st[0], st[1]
+        
+        if mapa[x][y] == 9:
+            return f
+        
         # DIREITA
         if y+1<ny:
             if mapa[x][y+1]==0:
@@ -486,7 +490,7 @@ class BuscaNP(busca):
                 self.canvas.get_tk_widget().destroy()
 
             self.canvas = FigureCanvasTkAgg(fig, master=janela)
-            self.canvas.get_tk_widget().grid(row=1, column=1, rowspan=7, padx=10, pady=0, sticky="nsew")
+            self.canvas.get_tk_widget().grid(row=2, column=1, rowspan=7, padx=10, pady=0, sticky="nsew")
 
         # Exibe no Tkinter
         if hasattr(self, "caminho_label") and self.caminho_label is not None:
