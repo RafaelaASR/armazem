@@ -88,13 +88,13 @@ class busca(object):
         
         # Fila de prioridade baseada em deque + inserção ordenada
         lista = deque()
-        t_inicio = tuple(inicio)   # grid
-        raiz = NodeP(None, t_inicio,0, None, None, 0)  # grid
+        t_inicio = tuple(inicio)   
+        raiz = NodeP(None, t_inicio,0, None, None, 0)  
         lista.append(raiz)
     
         # Controle de nós visitados
         #visitado = {inicio: raiz}
-        visitado = {tuple(inicio): raiz}    # grid
+        visitado = {tuple(inicio): raiz}    
         
         # loop de busca
         while lista:
@@ -108,18 +108,18 @@ class busca(object):
                 return caminho, atual.v2
             
             # Gera sucessores a partir do grid
-            filhos = self.sucessores_grid_ponderado(atual.estado,nx,ny,mapa) # grid
+            filhos = self.sucessores_grid_ponderado(atual.estado,nx,ny,mapa) 
     
-            for novo in filhos: # grid
+            for novo in filhos: 
                 # custo acumulado até o sucessor
                 v2 = valor_atual + novo[1]
                 v1 = v2 
     
                 # Não visitado ou custo melhor
-                t_novo = tuple(novo[0])       # grid
-                if (t_novo not in visitado) or (v2<visitado[t_novo].v2): # grid
-                    filho = NodeP(atual,t_novo, v1, None, None, v2) # grid
-                    visitado[t_novo] = filho # grid
+                t_novo = tuple(novo[0])       
+                if (t_novo not in visitado) or (v2<visitado[t_novo].v2): 
+                    filho = NodeP(atual,t_novo, v1, None, None, v2) 
+                    visitado[t_novo] = filho 
                     self.inserir_ordenado(lista, filho)
     
         # Sem caminho
@@ -152,7 +152,7 @@ class busca(object):
                 filhos = self.sucessores_grid_ponderado(atual.estado, nx, ny, mapa)
 
                 for novo in filhos:
-                    t_novo = tuple(novo[0])       # grid
+                    t_novo = tuple(novo[0])       
 
                     v2 = valor_atual + novo[1]
                     v1 = self.manhattan(t_novo, fim)

@@ -18,9 +18,18 @@ class BuscaNP(busca):
         self.canvas = None
 
         # Comboboxes
-        opcoes = ["0", "1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12", "13", "14", "15", 
-                "16", "17", "18", "19", "20", "21", "22", "23", "24", "25", "26", "27", "28", "29", 
-                "30", "31", "32", "33", "34", "35", "36", "37", "38", "39", "40", "41"]
+        opcoes = ["0", "1", "2", "3", "4", "5", "6", "7", "8", "9",
+                "10", "11", "12", "13", "14", "15", "16", "17", "18", "19",
+                "20", "21", "22", "23", "24", "25", "26", "27", "28", "29",
+                "30", "31", "32", "33", "34", "35", "36", "37", "38", "39",
+                "40", "41", "42", "43", "44", "45", "46", "47", "48", "49",
+                "50", "51", "52", "53", "54", "55", "56", "57", "58", "59",
+                "60", "61", "62", "63", "64", "65", "66", "67", "68", "69",
+                "70", "71", "72", "73", "74", "75", "76", "77", "78", "79",
+                "80", "81", "82", "83", "84", "85", "86", "87", "88", "89",
+                "90", "91", "92", "93", "94", "95", "96", "97", "98", "99"
+            ]
+
 
         metodos = ["AMPLITUDE", "PROFUNDIDADE", "PROFUNDIDADE LIMITADA",
         "APROFUNDAMENTO ITERATIVO", "BIDIRECIONAL", "CUSTO UNIFORME", "GREEDY", "A*", "AIA*"]
@@ -145,41 +154,41 @@ class BuscaNP(busca):
     #--------------------------------------------------------------------------
     # BUSCA EM AMPLITUDE
     #--------------------------------------------------------------------------
-    def amplitude(self,inicio,fim,nx,ny,mapa):  # grid
+    def amplitude(self,inicio,fim,nx,ny,mapa):  
         # Finaliza se início for igual a objetivo
         if inicio == fim:
             return [inicio]
         
-        # GRID: transforma em tupla
-        t_inicio = tuple(inicio)   # grid
-        t_fim = tuple(fim)         # grid
+        #transforma em tupla
+        t_inicio = tuple(inicio)   
+        t_fim = tuple(fim)         
         
         # Lista para árvore de busca - FILA
         fila = deque()
     
         # Inclui início como nó raíz da árvore de busca
-        raiz = Node(None,t_inicio,0,None,None)  # grid
+        raiz = Node(None,t_inicio,0,None,None)  
         fila.append(raiz)
     
         # Marca início como visitado
-        visitado = {tuple(inicio): raiz}    # grid
+        visitado = {tuple(inicio): raiz}    
         
         while fila:
             # Remove o primeiro da FILA
             atual = fila.popleft()
     
             # Gera sucessores a partir do grid
-            filhos = self.sucessores_grid(atual.estado,nx,ny,mapa) # grid
+            filhos = self.sucessores_grid(atual.estado,nx,ny,mapa) 
     
             for novo in filhos:
-                t_novo = tuple(novo)       # grid
-                if t_novo not in visitado: # grid
-                    filho = Node(atual,t_novo,atual.v1 + 1,None,None) # grid
+                t_novo = tuple(novo)       
+                if t_novo not in visitado: 
+                    filho = Node(atual,t_novo,atual.v1 + 1,None,None) 
                     fila.append(filho)
-                    visitado[t_novo] = filho # grid
+                    visitado[t_novo] = filho 
                     
                     # Verifica se encontrou o objetivo
-                    if t_novo == t_fim:    # grid
+                    if t_novo == t_fim:    
                         return self.exibirCaminho(filho)
         return None
 
@@ -191,36 +200,36 @@ class BuscaNP(busca):
         if inicio == fim:
             return [inicio]
         
-        # GRID: transforma em tupla
-        t_inicio = tuple(inicio)   # grid
-        t_fim = tuple(fim)         # grid
+        #transforma em tupla
+        t_inicio = tuple(inicio)   
+        t_fim = tuple(fim)         
         
         # Lista para árvore de busca - FILA
         pilha = deque()
     
         # Inclui início como nó raíz da árvore de busca
-        raiz = Node(None,t_inicio,0,None,None)  # grid
+        raiz = Node(None,t_inicio,0,None,None)  
         pilha.append(raiz)
     
         # Marca início como visitado
-        visitado = {tuple(inicio): raiz}    # grid
+        visitado = {tuple(inicio): raiz}    
         
         while pilha:
             # Remove o primeiro da FILA
             atual = pilha.pop()
     
             # Gera sucessores a partir do grid
-            filhos = self.sucessores_grid(atual.estado,nx,ny,mapa) # grid
+            filhos = self.sucessores_grid(atual.estado,nx,ny,mapa) 
     
             for novo in filhos:
-                t_novo = tuple(novo)   # grid
-                if t_novo not in visitado: # grid
-                    filho = Node(atual,t_novo,atual.v1 + 1,None,None) # grid
+                t_novo = tuple(novo)   
+                if t_novo not in visitado: 
+                    filho = Node(atual,t_novo,atual.v1 + 1,None,None) 
                     pilha.append(filho)
-                    visitado[t_novo] = filho # grid
+                    visitado[t_novo] = filho 
                     
                     # Verifica se encontrou o objetivo
-                    if t_novo == t_fim:    # grid
+                    if t_novo == t_fim:    
                         return self.exibirCaminho(filho)
         return None
     
@@ -232,19 +241,19 @@ class BuscaNP(busca):
         if inicio == fim:
             return [inicio]
         
-        # GRID: transforma em tupla
-        t_inicio = tuple(inicio)   # grid
-        t_fim = tuple(fim)         # grid
+        #transforma em tupla
+        t_inicio = tuple(inicio)   
+        t_fim = tuple(fim)         
         
         # Lista para árvore de busca - FILA
         pilha = deque()
     
         # Inclui início como nó raíz da árvore de busca
-        raiz = Node(None,t_inicio,0,None,None)  # grid
+        raiz = Node(None,t_inicio,0,None,None)  
         pilha.append(raiz)
     
         # Marca início como visitado
-        visitado = {tuple(inicio): raiz}    # grid
+        visitado = {tuple(inicio): raiz}    
         
         while pilha:
             # Remove o primeiro da FILA
@@ -252,17 +261,17 @@ class BuscaNP(busca):
             
             if atual.v1<lim:
                 # Gera sucessores a partir do grid
-                filhos = self.sucessores_grid(atual.estado,nx,ny,mapa) # grid
+                filhos = self.sucessores_grid(atual.estado,nx,ny,mapa) 
         
                 for novo in filhos:
-                    t_novo = tuple(novo)       # grid
-                    if t_novo not in visitado: # grid
-                        filho = Node(atual,t_novo,atual.v1 + 1,None,None) # grid
+                    t_novo = tuple(novo)       
+                    if t_novo not in visitado: 
+                        filho = Node(atual,t_novo,atual.v1 + 1,None,None) 
                         pilha.append(filho)
-                        visitado[t_novo] = filho # grid
+                        visitado[t_novo] = filho 
                         
                         # Verifica se encontrou o objetivo
-                        if t_novo == t_fim:    # grid
+                        if t_novo == t_fim:    
                             return self.exibirCaminho(filho)
         return None
 
@@ -277,19 +286,19 @@ class BuscaNP(busca):
             if inicio == fim:
                 return [inicio]
             
-            # GRID: transforma em tupla
-            t_inicio = tuple(inicio)   # grid
-            t_fim = tuple(fim)         # grid
+            #transforma em tupla
+            t_inicio = tuple(inicio)   
+            t_fim = tuple(fim)         
             
             # Lista para árvore de busca - FILA
             pilha = deque()
         
             # Inclui início como nó raíz da árvore de busca
-            raiz = Node(None,t_inicio,0,None,None)  # grid
+            raiz = Node(None,t_inicio,0,None,None)  
             pilha.append(raiz)
         
             # Marca início como visitado
-            visitado = {tuple(inicio): raiz}    # grid
+            visitado = {tuple(inicio): raiz}    
             
             while pilha:
                 # Remove o primeiro da FILA
@@ -297,17 +306,17 @@ class BuscaNP(busca):
                 
                 if atual.v1<lim:                    
                     # Gera sucessores a partir do grid
-                    filhos = self.sucessores_grid(atual.estado,nx,ny,mapa) # grid
+                    filhos = self.sucessores_grid(atual.estado,nx,ny,mapa) 
             
                     for novo in filhos:
-                        t_novo = tuple(novo)       # grid
-                        if t_novo not in visitado: # grid
-                            filho = Node(atual,t_novo,atual.v1 + 1,None,None) # grid
+                        t_novo = tuple(novo)       
+                        if t_novo not in visitado: 
+                            filho = Node(atual,t_novo,atual.v1 + 1,None,None) 
                             pilha.append(filho)
-                            visitado[t_novo] = filho # grid
+                            visitado[t_novo] = filho 
                             
                             # Verifica se encontrou o objetivo
-                            if t_novo == t_fim:    # grid
+                            if t_novo == t_fim:    
                                 return self.exibirCaminho(filho)
         return None
     
@@ -318,9 +327,9 @@ class BuscaNP(busca):
         if inicio == fim:
             return [inicio]
         
-        # GRID: transforma em tupla
-        t_inicio = tuple(inicio)   # grid
-        t_fim = tuple(fim)         # grid
+        #transforma em tupla
+        t_inicio = tuple(inicio)   
+        t_fim = tuple(fim)         
 
         # Lista para árvore de busca a partir da origem - FILA
         fila1 = deque()
@@ -329,15 +338,15 @@ class BuscaNP(busca):
         fila2 = deque()
         
         # Inclui início e fim como nó raíz da árvore de busca
-        raiz = Node(None,t_inicio,0,None,None)  # grid
+        raiz = Node(None,t_inicio,0,None,None)  
         fila1.append(raiz)
 
-        raiz = Node(None,t_fim,0,None,None)  # grid
+        raiz = Node(None,t_fim,0,None,None)  
         fila2.append(raiz)
     
         # Visitados mapeando estado -> Node (para reconstruir o caminho)
-        visitado1 = {tuple(inicio): raiz}    # grid
-        visitado2 = {tuple(fim): raiz}    # grid
+        visitado1 = {tuple(inicio): raiz}    
+        visitado2 = {tuple(fim): raiz}    
         
         nivel = 0
         while fila1 and fila2:
@@ -349,16 +358,16 @@ class BuscaNP(busca):
                 atual = fila1.popleft()
 
                 # Gera sucessores a partir do grid
-                filhos = self.sucessores_grid(atual.estado,nx,ny,mapa) # grid
+                filhos = self.sucessores_grid(atual.estado,nx,ny,mapa) 
 
                 for novo in filhos:
-                    t_novo = tuple(novo)       # grid
-                    if t_novo not in visitado1: # grid
-                        filho = Node(atual,t_novo,atual.v1 + 1,None,None) # grid
-                        visitado1[t_novo] = filho # grid
+                    t_novo = tuple(novo)       
+                    if t_novo not in visitado1: 
+                        filho = Node(atual,t_novo,atual.v1 + 1,None,None) 
+                        visitado1[t_novo] = filho 
 
                         # Encontrou encontro com a outra AMPLITUDE
-                        if t_novo in visitado2:    # grid
+                        if t_novo in visitado2:    
                             return self.exibirCaminho1(tuple(novo), visitado1, visitado2)
 
                         # Insere na FILA
@@ -372,16 +381,16 @@ class BuscaNP(busca):
                 atual = fila2.popleft()
                 
                 # Gera sucessores a partir do grid
-                filhos = self.sucessores_grid(atual.estado,nx,ny,mapa) # grid
+                filhos = self.sucessores_grid(atual.estado,nx,ny,mapa) 
 
                 for novo in filhos:
-                    t_novo = tuple(novo)       # grid
-                    if t_novo not in visitado2: # grid
-                        filho = Node(atual,t_novo,atual.v1 + 1,None,None) # grid
-                        visitado2[t_novo] = filho # grid
+                    t_novo = tuple(novo)       
+                    if t_novo not in visitado2: 
+                        filho = Node(atual,t_novo,atual.v1 + 1,None,None) 
+                        visitado2[t_novo] = filho 
 
                         # Encontrou encontro com a outra AMPLITUDE
-                        if t_novo in visitado1:    # grid
+                        if t_novo in visitado1:    
                             return self.exibirCaminho1(t_novo, visitado1, visitado2)
 
                         # Insere na FILA
@@ -416,9 +425,9 @@ class BuscaNP(busca):
         custo_str = 0
         if origem and destino and metodo:  # só se todos estiverem preenchidos
             if metodo == "AMPLITUDE":
-                caminho = self.amplitude(inicio,fim,nx,ny,mapa)   # grid
+                caminho = self.amplitude(inicio,fim,nx,ny,mapa)   
             elif metodo == "PROFUNDIDADE":
-                caminho = self.profundidade(inicio,fim,nx,ny,mapa)   # grid
+                caminho = self.profundidade(inicio,fim,nx,ny,mapa)   
             elif metodo == "PROFUNDIDADE LIMITADA":
                 caminho = self.prof_limitada(inicio,fim,nx,ny,mapa, 4)
             elif metodo == "APROFUNDAMENTO INTERATIVO":
@@ -502,14 +511,14 @@ class BuscaNP(busca):
         else:
             # Se houver custo (como UCS), você pode ter custo_str
             if 'custo_str' in locals():
-                texto = f"Caminho encontrado: {caminho_str} | Custo total: {custo_str}"
+                texto = f"Caminho encontrado: {caminho_str} \nCusto total: {custo_str}"
             else:
                 texto = f"Caminho encontrado: {caminho_str}"
             cor = "black"
 
         # Cria/atualiza a label
-        self.caminho_label = tk.Label(self.janela, text=texto, font=("Arial", 12), fg=cor, background="#dfe3ee",wraplength=1000)
-        self.caminho_label.grid(row=0, column=0, columnspan=2, padx=10, pady=0)
+        self.caminho_label = tk.Label(self.janela, text=texto, font=("Arial", 12), fg=cor, background="#dfe3ee",wraplength=400)
+        self.caminho_label.grid(row=8, column=0, padx=10, pady=0)
 
 # -------------------------
 # CRIAR A JANELA E INICIAR
