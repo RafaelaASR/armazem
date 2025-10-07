@@ -508,8 +508,8 @@ class BuscaNP(busca):
             cor = "black"
 
         # Cria/atualiza a label
-        self.caminho_label = tk.Label(self.janela, text=texto, font=("Arial", 12), fg=cor, background="#dfe3ee")
-        self.caminho_label.grid(row=0, column=1, columnspan=2, padx=10, pady=0)
+        self.caminho_label = tk.Label(self.janela, text=texto, font=("Arial", 12), fg=cor, background="#dfe3ee",wraplength=1000)
+        self.caminho_label.grid(row=0, column=0, columnspan=2, padx=10, pady=0)
 
 # -------------------------
 # CRIAR A JANELA E INICIAR
