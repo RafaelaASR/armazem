@@ -541,7 +541,7 @@ class BuscaNP(busca):
             cor = "black"
 
         # Cria/atualiza a label
-        self.caminho_label = tk.Label(self.janela, text=texto, font=("Arial", 12), fg=cor, background="#ffffff",wraplength=900)
+        self.caminho_label = tk.Label(self.janela, text=texto, font=("Arial", 12), fg=cor, background="#ffffff",wraplength=500)
         self.caminho_label.grid(row=8, column=0, padx=10, pady=5)
 
 # -------------------------
