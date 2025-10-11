@@ -21,8 +21,7 @@ class BuscaNP(busca):
         self.janela.grid_columnconfigure(2, weight=1)
         self.janela.grid_rowconfigure(8, weight=1)
         self.janela.configure(background='#dfe3ee')
-        self.janela.geometry("900x1000")
-        self.janela.minsize(1900, 1000)
+        self.janela.minsize(1000, 600)
 
         # Comboboxes
         opcoes = ["0 - (0, 0)", "1 - (0, 1)", "2 - (0, 2)", "3 - (0, 3)", "4 - (0, 4)", "5 - (0, 5)", "6 - (0, 6)", "7 - (0, 7)", "8 - (0, 8)", "9 - (0, 9)",
@@ -45,7 +44,6 @@ class BuscaNP(busca):
         # Estilo frame
         self.frame.grid_columnconfigure(0, weight=1)
         self.frame.grid_columnconfigure(2, weight=1)
-        self.frame.grid_rowconfigure(8, weight=1)
 
         style = ttk.Style()
         style.map("Custom.TCombobox",
@@ -59,33 +57,32 @@ class BuscaNP(busca):
 
         # Origem
         self.label_origem = ttk.Label(self.frame, text="Ponto de origem", style="LabelStyle.TLabel")
-        self.label_origem.grid(row=1, column=0,  padx=20, pady=(20, 2), sticky="ew")
+        self.label_origem.grid(row=1, column=0,  padx=20, pady=(20,0), sticky="ew")
         self.origem_combobox = ttk.Combobox(self.frame, values=opcoes, state="readonly", style="Custom.TCombobox")
-        self.origem_combobox.grid(row=2, column=0, padx=20, pady=20, sticky="ew")
+        self.origem_combobox.grid(row=2, column=0, padx=20, pady=0, sticky="ew")
 
         # Destino
         self.label_destino = ttk.Label(self.frame, text="Ponto de destino", style="LabelStyle.TLabel")
-        self.label_destino.grid(row=1, column=1, padx=20, pady=(20, 2), sticky="ew")
+        self.label_destino.grid(row=1, column=1, padx=20, pady=(20,0), sticky="ew")
         self.destino_combobox = ttk.Combobox(self.frame, values=opcoes, state="readonly", style="Custom.TCombobox")
-        self.destino_combobox.grid(row=2, column=1, padx=20, pady=20, sticky="ew")
+        self.destino_combobox.grid(row=2, column=1, padx=20, pady=0, sticky="ew")
 
         # Métodos
         self.label_metodo = ttk.Label(self.frame, text="Método de busca", style="LabelStyle.TLabel")
         self.label_metodo.grid(row=5, column=0, padx=20, pady=(20, 2), sticky="ew")
         self.metodo_combobox = ttk.Combobox(self.frame, values=metodos, state="readonly", style="Custom.TCombobox")
-        self.metodo_combobox.grid(row=6, column=0, padx=20, pady=20, sticky="ew")
+        self.metodo_combobox.grid(row=6, column=0, padx=20, pady=0, sticky="ew")
         self.metodo_combobox.bind("<<ComboboxSelected>>", self.opcao_limite)
 
         # Limite
         self.label_limite = ttk.Label(self.frame, text="Limite para profundidade limitada", style="LabelStyle.TLabel")
         self.label_limite.grid(row=5, column=1, padx=20, pady=(20, 2), sticky="ew")
         self.limite_combobox = ttk.Combobox(self.frame, values=limite, state="disabled", style="Custom.TCombobox")
-        self.limite_combobox.grid(row=6, column=1, padx=20, pady=20, sticky="ew")
+        self.limite_combobox.grid(row=6, column=1, padx=20, pady=0, sticky="ew")
 
         # Botão
-        self.botao = tk.Button(self.frame, text="Obter Valor", command=self.obter_valor_selecionado, background="#c1cff6", borderwidth=1,        # remove a borda do botão
-        highlightthickness=0, wraplength=900)
-        self.botao.grid(row=7, column=0, columnspan=1, padx=5, pady=20, sticky="ew")
+        self.botao = tk.Button(self.frame, text="Obter Valor", command=self.obter_valor_selecionado, background="#c1cff6", borderwidth=0)
+        self.botao.grid(row=7, column=0, columnspan=1, padx=20, pady=20, sticky="ew")
     
     def opcao_limite(self, event):
         metodo = self.metodo_combobox.get()
@@ -109,7 +106,7 @@ class BuscaNP(busca):
         ny = len(mapa[0])
         return mapa,nx,ny
 
-       #--------------------------------------------------------------------------
+    #--------------------------------------------------------------------------
     # SUCESSORES PARA GRID
     #--------------------------------------------------------------------------
     # SUCESSORES PARA GRID (LISTA DE ADJACENCIAS)
@@ -305,9 +302,7 @@ class BuscaNP(busca):
                         if t_novo == t_fim:    
                             return self.exibirCaminho(filho)
         return None
-
-     #--------------------------------------------------------------------------
-    
+        
     #--------------------------------------------------------------------------
     # BUSCA EM APROFUNDAMENTO ITERATIVO
     #--------------------------------------------------------------------------
@@ -455,7 +450,7 @@ class BuscaNP(busca):
 
         caminho = None
         custo_str = 0
-        if origem and destino and metodo:  # só se todos estiverem preenchidos
+        if origem and destino and metodo:
             if metodo == "AMPLITUDE":
                 caminho = self.amplitude(inicio,fim,nx,ny,mapa)   
             elif metodo == "PROFUNDIDADE":
@@ -539,14 +534,14 @@ class BuscaNP(busca):
             self.caminho_label.destroy()
 
         if caminho is None:
-            texto = caminho_str  # geralmente "Caminho não encontrado"
+            texto = caminho_str
             cor = "red"
         else:
             texto = f"Caminho encontrado: {caminho_str} \nCusto total: {custo_str}"
             cor = "black"
 
         # Cria/atualiza a label
-        self.caminho_label = tk.Label(self.janela, text=texto, font=("Arial", 12), fg=cor, background="#ffffff",wraplength=900, anchor="w")
+        self.caminho_label = tk.Label(self.janela, text=texto, font=("Arial", 12), fg=cor, background="#ffffff",wraplength=900)
         self.caminho_label.grid(row=8, column=0, padx=10, pady=5)
 
 # -------------------------
