@@ -53,7 +53,7 @@ class BuscaNP(busca):
         style.configure("LabelStyle.TLabel", font=("Arial", 12), foreground="black", background="#ffffff")
 
         self.label = ttk.Label(self.frame, text="Selecione os campos abaixo:", style="LabelStyle.TLabel")
-        self.label.grid(row=0, column=0, padx=20, pady=20)
+        self.label.grid(row=0, column=0,columnspan=1, padx=20, pady=20)
 
         # Origem
         self.label_origem = ttk.Label(self.frame, text="Ponto de origem", style="LabelStyle.TLabel")
@@ -302,7 +302,7 @@ class BuscaNP(busca):
                         if t_novo == t_fim:    
                             return self.exibirCaminho(filho)
         return None
-        
+    
     #--------------------------------------------------------------------------
     # BUSCA EM APROFUNDAMENTO ITERATIVO
     #--------------------------------------------------------------------------
