@@ -17,52 +17,82 @@ class BuscaNP(busca):
         self.janela = janela
         self.canvas = None
 
+        # Estilo da janela
+        self.janela.grid_columnconfigure(2, weight=1)
+        self.janela.grid_rowconfigure(8, weight=1)
+        self.janela.configure(background='#dfe3ee')
+        self.janela.geometry("900x1000")
+        self.janela.minsize(1900, 1000)
+
         # Comboboxes
         opcoes = ["0 - (0, 0)", "1 - (0, 1)", "2 - (0, 2)", "3 - (0, 3)", "4 - (0, 4)", "5 - (0, 5)", "6 - (0, 6)", "7 - (0, 7)", "8 - (0, 8)", "9 - (0, 9)",
             "10 - (1, 0)", "11 - (1, 1)", "12 - (1, 2)", "13 - (1, 3)", "14 - (1, 4)", "15 - (1, 5)", "16 - (1, 6)", "17 - (1, 7)", "18 - (1, 8)", "19 - (1, 9)",
             "20 - (2, 0)", "21 - (2, 1)", "22 - (2, 2)", "23 - (2, 3)", "24 - (2, 4)", "25 - (2, 5)", "26 - (2, 6)", "27 - (2, 7)", "28 - (2, 8)", "29 - (2, 9)",
             "30 - (3, 0)", "31 - (3, 1)", "32 - (3, 2)", "33 - (3, 3)", "34 - (3, 4)", "35 - (3, 5)", "36 - (3, 6)", "37 - (3, 7)", "38 - (3, 8)", "39 - (3, 9)",
             "40 - (4, 0)", "41 - (4, 1)", "42 - (4, 2)", "43 - (4, 3)", "44 - (4, 4)", "45 - (4, 5)", "46 - (4, 6)", "47 - (4, 7)", "48 - (4, 8)", "49 - (4, 9)",
-            "50 - (5, 0)", "51 - (5, 1)", "52 - (5, 2)", "53 - (5, 3)", "54 - (5, 4)", "55 - (5, 5)", "56 - (5, 6)", "57 - (5, 7)", "58 - (5, 8)", "59 - (5, 9)",
-            "60 - (6, 0)", "61 - (6, 1)", "62 - (6, 2)", "63 - (6, 3)", "64 - (6, 4)", "65 - (6, 5)", "66 - (6, 6)", "67 - (6, 7)", "68 - (6, 8)", "69 - (6, 9)",
-            "70 - (7, 0)", "71 - (7, 1)", "72 - (7, 2)", "73 - (7, 3)", "74 - (7, 4)", "75 - (7, 5)", "76 - (7, 6)", "77 - (7, 7)", "78 - (7, 8)", "79 - (7, 9)",
-            "80 - (8, 0)", "81 - (8, 1)", "82 - (8, 2)", "83 - (8, 3)", "84 - (8, 4)", "85 - (8, 5)", "86 - (8, 6)", "87 - (8, 7)", "88 - (8, 8)", "89 - (8, 9)",
-            "90 - (9, 0)", "91 - (9, 1)", "92 - (9, 2)", "93 - (9, 3)", "94 - (9, 4)", "95 - (9, 5)", "96 - (9, 6)", "97 - (9, 7)", "98 - (9, 8)", "99 - (9, 9)"
-        ]
-
-
+            "50 - (5, 0)"]
 
         metodos = ["AMPLITUDE", "PROFUNDIDADE", "PROFUNDIDADE LIMITADA",
         "APROFUNDAMENTO ITERATIVO", "BIDIRECIONAL", "CUSTO UNIFORME", "GREEDY", "A*", "AIA*"]
 
-        self.label_origem = ttk.Label(self.janela, text="Selecione o ponto de origem:", font=("Arial", 12), foreground="black", background="#dfe3ee")
-        self.label_origem.grid(row=1, column=0,  padx=20, pady=(0,0), sticky="ew")
+        limite = ["0", "1", "2", "3", "4", "5", "6", "7", "8", "9","10",
+                  "11", "12", "13", "14", "15", "16", "17", "18", "19", "20",
+                  "21", "22", "23", "24", "25", "26", "27", "28", "29", "30"]
 
-        self.origem_combobox = ttk.Combobox(self.janela, values=opcoes, state="readonly")
-        self.origem_combobox.grid(row=2, column=0, padx=20, pady=(2, 5), sticky="ew")
+        self.frame = tk.Frame(self.janela, bg="white")
+        self.frame.grid(row=0, column=0, rowspan=9, columnspan=2, padx=10, pady=10, sticky="nsew")
 
-        self.label_destino = ttk.Label(self.janela, text="Selecione o ponto de destino:", font=("Arial", 12), foreground="black", background="#dfe3ee")
-        self.label_destino.grid(row=3, column=0, padx=20, pady=5, sticky="ew")
+        # Estilo frame
+        self.frame.grid_columnconfigure(0, weight=1)
+        self.frame.grid_columnconfigure(2, weight=1)
+        self.frame.grid_rowconfigure(8, weight=1)
 
-        self.destino_combobox = ttk.Combobox(self.janela, values=opcoes, state="readonly")
-        self.destino_combobox.grid(row=4, column=0, padx=20, pady=5, sticky="ew")
+        style = ttk.Style()
+        style.map("Custom.TCombobox",
+          fieldbackground=[("readonly", "#ffffff"), ("disabled", "#B2B4BA")],
+          foreground=[("readonly", "black"), ("disabled", "gray")])
+        
+        style.configure("LabelStyle.TLabel", font=("Arial", 12), foreground="black", background="#ffffff")
 
-        self.label_metodo = ttk.Label(self.janela, text="Selecione o método de busca:", font=("Arial", 12), foreground="black", background="#dfe3ee")
-        self.label_metodo.grid(row=5, column=0, padx=20, pady=5, sticky="ew")
+        self.label = ttk.Label(self.frame, text="Selecione os campos abaixo:", style="LabelStyle.TLabel")
+        self.label.grid(row=0, column=0, padx=20, pady=20)
 
-        self.metodo_combobox = ttk.Combobox(self.janela, values=metodos, state="readonly")
-        self.metodo_combobox.grid(row=6, column=0, padx=20, pady=(2, 5), sticky="ew")
+        # Origem
+        self.label_origem = ttk.Label(self.frame, text="Ponto de origem", style="LabelStyle.TLabel")
+        self.label_origem.grid(row=1, column=0,  padx=20, pady=(20, 2), sticky="ew")
+        self.origem_combobox = ttk.Combobox(self.frame, values=opcoes, state="readonly", style="Custom.TCombobox")
+        self.origem_combobox.grid(row=2, column=0, padx=20, pady=20, sticky="ew")
 
-        # Botão — agora dentro do __init__, então self existe
-        self.botao = tk.Button(self.janela, text="Obter Valor", command=self.obter_valor_selecionado, background="#c1cff6", borderwidth=1,        # remove a borda do botão
-        highlightthickness=0)
-        self.botao.grid(row=7, column=0, columnspan=1, padx=5, pady=5, sticky="ew")
+        # Destino
+        self.label_destino = ttk.Label(self.frame, text="Ponto de destino", style="LabelStyle.TLabel")
+        self.label_destino.grid(row=1, column=1, padx=20, pady=(20, 2), sticky="ew")
+        self.destino_combobox = ttk.Combobox(self.frame, values=opcoes, state="readonly", style="Custom.TCombobox")
+        self.destino_combobox.grid(row=2, column=1, padx=20, pady=20, sticky="ew")
 
+        # Métodos
+        self.label_metodo = ttk.Label(self.frame, text="Método de busca", style="LabelStyle.TLabel")
+        self.label_metodo.grid(row=5, column=0, padx=20, pady=(20, 2), sticky="ew")
+        self.metodo_combobox = ttk.Combobox(self.frame, values=metodos, state="readonly", style="Custom.TCombobox")
+        self.metodo_combobox.grid(row=6, column=0, padx=20, pady=20, sticky="ew")
+        self.metodo_combobox.bind("<<ComboboxSelected>>", self.opcao_limite)
 
-        # Configura expansão do grid
-        self.janela.grid_columnconfigure(1, weight=1)
-        self.janela.grid_rowconfigure(8, weight=1)
-        self.janela.configure(background='#dfe3ee')
+        # Limite
+        self.label_limite = ttk.Label(self.frame, text="Limite para profundidade limitada", style="LabelStyle.TLabel")
+        self.label_limite.grid(row=5, column=1, padx=20, pady=(20, 2), sticky="ew")
+        self.limite_combobox = ttk.Combobox(self.frame, values=limite, state="disabled", style="Custom.TCombobox")
+        self.limite_combobox.grid(row=6, column=1, padx=20, pady=20, sticky="ew")
+
+        # Botão
+        self.botao = tk.Button(self.frame, text="Obter Valor", command=self.obter_valor_selecionado, background="#c1cff6", borderwidth=1,        # remove a borda do botão
+        highlightthickness=0, wraplength=900)
+        self.botao.grid(row=7, column=0, columnspan=1, padx=5, pady=20, sticky="ew")
+    
+    def opcao_limite(self, event):
+        metodo = self.metodo_combobox.get()
+        if(metodo == "PROFUNDIDADE LIMITADA"):
+            self.limite_combobox.configure(state="readonly")
+        else:
+            self.limite_combobox.configure(state="disabled")
  
     #-----------------------------------------------------------------------------
     # GERA O GRID DE ARQUIVO TEXTO
@@ -402,8 +432,9 @@ class BuscaNP(busca):
         origem = self.origem_combobox.get() 
         destino = self.destino_combobox.get()
         metodo = self.metodo_combobox.get()
+        limite = self.limite_combobox.get()
 
-        arquivo = "mapa1.txt"
+        arquivo = "mapa.txt"
         mapa, nx, ny = self.Gera_Problema_Grid_Fixo(arquivo)
 
         # Converte para posição no grid
@@ -429,10 +460,10 @@ class BuscaNP(busca):
                 caminho = self.amplitude(inicio,fim,nx,ny,mapa)   
             elif metodo == "PROFUNDIDADE":
                 caminho = self.profundidade(inicio,fim,nx,ny,mapa)   
-            elif metodo == "PROFUNDIDADE LIMITADA":
-                caminho = self.prof_limitada(inicio,fim,nx,ny,mapa, 30)
+            elif metodo == "PROFUNDIDADE LIMITADA": 
+                caminho = self.prof_limitada(inicio,fim,nx,ny,mapa,int(limite))
             elif metodo == "APROFUNDAMENTO INTERATIVO":
-                caminho = self.aprof_iterativo(inicio,fim,nx,ny,mapa, 4)
+                caminho = self.aprof_iterativo(inicio,fim,nx,ny,mapa, 20)
             elif metodo == "BIDIRECIONAL":
                 caminho = self.bidirecional(inicio,fim,nx,ny,mapa)
             elif metodo == "CUSTO UNIFORME":
@@ -461,7 +492,7 @@ class BuscaNP(busca):
             # Recebe os pontos (x, y)
             plot_fig.imshow(mapa, cmap=cm.Greys, origin="upper")
 
-            # Adicionar grid
+            # Adiciona grid
             for x in range(nx + 1):
                 plot_fig.axvline(x - 0.5, color="black", linewidth=0.5)
             for y in range(ny + 1):
@@ -501,7 +532,7 @@ class BuscaNP(busca):
                 self.canvas.get_tk_widget().destroy()
 
             self.canvas = FigureCanvasTkAgg(fig, master=janela)
-            self.canvas.get_tk_widget().grid(row=2, column=1, rowspan=7, padx=10, pady=0, sticky="nsew")
+            self.canvas.get_tk_widget().grid(row=2, column=2, rowspan=7, padx=10, pady=0, sticky="nsew")
 
         # Exibe no Tkinter
         if hasattr(self, "caminho_label") and self.caminho_label is not None:
@@ -511,16 +542,12 @@ class BuscaNP(busca):
             texto = caminho_str  # geralmente "Caminho não encontrado"
             cor = "red"
         else:
-            # Se houver custo (como UCS), você pode ter custo_str
-            if 'custo_str' in locals():
-                texto = f"Caminho encontrado: {caminho_str} \nCusto total: {custo_str}"
-            else:
-                texto = f"Caminho encontrado: {caminho_str}"
+            texto = f"Caminho encontrado: {caminho_str} \nCusto total: {custo_str}"
             cor = "black"
 
         # Cria/atualiza a label
-        self.caminho_label = tk.Label(self.janela, text=texto, font=("Arial", 12), fg=cor, background="#dfe3ee",wraplength=400)
-        self.caminho_label.grid(row=8, column=0, padx=10, pady=0)
+        self.caminho_label = tk.Label(self.janela, text=texto, font=("Arial", 12), fg=cor, background="#ffffff",wraplength=900, anchor="w")
+        self.caminho_label.grid(row=8, column=0, padx=10, pady=5)
 
 # -------------------------
 # CRIAR A JANELA E INICIAR
