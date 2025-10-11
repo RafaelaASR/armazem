@@ -82,7 +82,7 @@ class BuscaNP(busca):
 
         # Botão
         self.botao = tk.Button(self.frame, text="Obter Valor", command=self.obter_valor_selecionado, background="#c1cff6", borderwidth=0)
-        self.botao.grid(row=7, column=0, columnspan=1, padx=20, pady=20, sticky="ew")
+        self.botao.grid(row=7, column=0, padx=20, pady=20, sticky="ew")
     
     def opcao_limite(self, event):
         metodo = self.metodo_combobox.get()
